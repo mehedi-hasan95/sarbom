@@ -1,0 +1,42 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "fe463b3f-2635-455d-9cbd-91880ad04b63",
+  "prevIds": [
+    "6509df0b-b031-4d4f-abce-60109b1fec0f"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": [
+        "enum",
+        "public",
+        "role"
+      ],
+      "writes": [
+        "s|enum|public.role",
+        "n|enum|public.role",
+        "e|enum|public.role",
+        "n|type|public.role"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "role",
+        "values": [
+          "user",
+          "admin"
+        ],
+        "entityType": "enums"
+      }
+    }
+  ]
+}
