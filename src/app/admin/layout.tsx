@@ -13,6 +13,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getQueryClient } from "@/lib/transtack-query/get-query-client";
+import { getCategoryOptions } from "@/transtack-options/category-data";
+import { dehydrate, HydrationBoundary, noop } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { connection } from "next/server";
+import { Hydrated } from "@/components/common/hydration-boundary";
 
 interface Props {
   children: React.ReactNode;
@@ -45,7 +51,13 @@ const Page = async ({ children }: Props) => {
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <Suspense fallback={<p>Loading...</p>}>
+            <Hydrated prefetch={(qc) => qc.query(getCategoryOptions)}>
+              {children}
+            </Hydrated>
+          </Suspense>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

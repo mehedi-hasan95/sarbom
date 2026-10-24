@@ -1,16 +1,20 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { User2 } from "lucide-react";
 import { AdminDashboardHeader } from "./admin-dashboard-header";
-import { AdminSidebarMain } from "./admin-dashboard-main";
+import { DashboardMenu } from "./dashboard-menu";
+import {
+  ADMIN_MENUS_E_COMMERCE,
+  ADMIN_MENUS_MAIN,
+  ADMIN_MENUS_OVERVIEW,
+} from "@/constants/admin-menus";
+import { AdminDashboardUser } from "./admin-dashboard-user";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -19,16 +23,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <AdminDashboardHeader />
       </SidebarHeader>
       <SidebarContent>
-        <AdminSidebarMain />
+        <DashboardMenu menus={ADMIN_MENUS_OVERVIEW} label="Overview" />
+        <DashboardMenu menus={ADMIN_MENUS_MAIN} label="Dashboard" />
+        <DashboardMenu menus={ADMIN_MENUS_E_COMMERCE} label="eCommerce" />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton>
-              <User2 /> Username
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <AdminDashboardUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
