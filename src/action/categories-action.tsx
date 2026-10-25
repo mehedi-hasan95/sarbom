@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { categories } from "@/db/index.schema";
 import { categoryValidator } from "@/db/zod-validator/validators";
 import { getSession } from "@/lib/get-session";
+import { getPgError } from "@/utils/error-handler";
 import { eq } from "drizzle-orm";
 import z from "zod";
 
@@ -23,18 +24,24 @@ export const createCategory = async (
       return { error: "Invalid payload" };
     }
 
-    // const user = await getSession();
-    // if (!user || user.role !== "admin") {
-    //   return { error: "Unauthorize" };
+    // const user = await getSession()
+    // if (!user||user.role!=="admin") {
+    //     return {error:"Unauthorize"}
     // }
 
     const [data] = await db
       .insert(categories)
-      .values({ ...validateData.data })
+      .values(validateData.data)
       .returning();
+
     return { data };
   } catch (error) {
-    return { error: error || "Something went wrong" };
+    const pgError = getPgError(error);
+
+    if (pgError?.code === "23505") {
+      return { error: "A category with this slug already exists" };
+    }
+    return { error: "Something went wrong" };
   }
 };
 

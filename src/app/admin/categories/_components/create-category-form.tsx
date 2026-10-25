@@ -8,7 +8,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { categoryValidator } from "@/db/zod-validator/validators";
 import { InputController } from "@/components/form/input-controller";
 import { Button } from "@/components/ui/button";
-import { useDialogStore } from "@/store/useModalStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCategory } from "@/action/categories-action";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ const slugify = (str: string) =>
     .replace(/^-+|-+$/g, "");
 
 export const CreateCategoryForm = () => {
-  const setOpen = useDialogStore((state) => state.setOpen);
+  const close = useModalStore((state) => state.close);
 
   const form = useForm<z.infer<typeof categoryValidator>>({
     resolver: zodResolver(categoryValidator),
@@ -61,7 +61,7 @@ export const CreateCategoryForm = () => {
 
       toast.success("Category created successfully");
       queryClient.invalidateQueries({ queryKey: category_cache });
-      setOpen(false);
+      close();
     },
     onError: () => {
       toast.error("Something went wrong");
