@@ -19,6 +19,7 @@ interface Props {
   description?: string;
   className?: string;
   id?: string;
+  showTrigger?: boolean;
 }
 export const ModifyDialog = ({
   children,
@@ -27,6 +28,7 @@ export const ModifyDialog = ({
   title,
   trigger = <Button variant="outline">Open</Button>,
   id,
+  showTrigger = true,
 }: Props) => {
   const autoId = useId();
   const modalId = id ?? autoId;
@@ -39,7 +41,7 @@ export const ModifyDialog = ({
       open={isOpen}
       onOpenChange={(next) => (next ? open(modalId) : close())}
     >
-      <DialogTrigger render={trigger} />
+      {showTrigger && <DialogTrigger render={trigger} />}
       <DialogContent className={cn("sm:max-w-sm", className)}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>

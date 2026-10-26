@@ -15,6 +15,7 @@ import {
   ADMIN_MENUS_OVERVIEW,
 } from "@/constants/admin-menus";
 import { AdminDashboardUser } from "./admin-dashboard-user";
+import { Suspense } from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -23,9 +24,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <AdminDashboardHeader />
       </SidebarHeader>
       <SidebarContent>
-        <DashboardMenu menus={ADMIN_MENUS_OVERVIEW} label="Overview" />
-        <DashboardMenu menus={ADMIN_MENUS_MAIN} label="Dashboard" />
-        <DashboardMenu menus={ADMIN_MENUS_E_COMMERCE} label="eCommerce" />
+        <Suspense>
+          <DashboardMenu menus={ADMIN_MENUS_OVERVIEW} label="Overview" />
+          <DashboardMenu menus={ADMIN_MENUS_MAIN} label="Dashboard" />
+          <DashboardMenu menus={ADMIN_MENUS_E_COMMERCE} label="eCommerce" />
+        </Suspense>
       </SidebarContent>
       <SidebarFooter>
         <AdminDashboardUser />

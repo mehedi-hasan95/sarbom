@@ -7,16 +7,21 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { useModalStore } from "@/store/useModalStore";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
 
 interface Props {
   id: string;
+  slug: string;
   onDelete: (id: string) => void;
 }
 
-export const AdminCategoryCell = ({ id, onDelete }: Props) => {
+export const AdminCategoryCell = ({ id, slug, onDelete }: Props) => {
+  const open = useModalStore((set) => set.open);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -30,7 +35,13 @@ export const AdminCategoryCell = ({ id, onDelete }: Props) => {
       <DropdownMenuContent className="w-40" align="end">
         <DropdownMenuGroup>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => onDelete(id)}>
+          <DropdownMenuItem onClick={() => open("create_category", slug)}>
+            <Edit />
+            Edit Category
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => open("delete_category", id)}>
+            <Trash />
             Delete Category
           </DropdownMenuItem>
         </DropdownMenuGroup>

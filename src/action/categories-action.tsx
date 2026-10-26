@@ -66,7 +66,12 @@ export const updateCategory = async (
       .returning();
     return { data };
   } catch (error) {
-    return { error: error || "Something went wrong" };
+    const pgError = getPgError(error);
+
+    if (pgError?.code === "23505") {
+      return { error: "A category with this slug already exists" };
+    }
+    return { error: "Something went wrong" };
   }
 };
 
@@ -82,4 +87,9 @@ export const deleteCategory = async (id: string) => {
   } catch (error) {
     return { error: error || "Something went wrong" };
   }
+};
+
+export const getSingleCategory = async (slug: string) => {
+  const data = await db.query.categories.findFirst({ where: { slug } });
+  return { data };
 };

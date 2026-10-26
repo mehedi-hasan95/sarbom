@@ -55,7 +55,11 @@ export const adminCategoryColumns = (onDelete: (id: string) => void) =>
     columnHelper.display({
       id: "Action",
       cell: ({ row }) => (
-        <AdminCategoryCell id={row.original.id!} onDelete={onDelete} />
+        <AdminCategoryCell
+          id={row.original.id!}
+          slug={row.original.slug!}
+          onDelete={onDelete}
+        />
       ),
     }),
   ]);

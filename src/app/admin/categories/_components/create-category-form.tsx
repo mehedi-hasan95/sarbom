@@ -9,11 +9,12 @@ import { categoryValidator } from "@/db/zod-validator/validators";
 import { InputController } from "@/components/form/input-controller";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/store/useModalStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createCategory } from "@/action/categories-action";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createCategory, updateCategory } from "@/action/categories-action";
 import { toast } from "sonner";
-import { category_cache } from "@/constants/query-cache";
+import { category_cache, single_category_cache } from "@/constants/query-cache";
 import { LoadingButton } from "@/components/common/loading-button";
+import { getSingleCategoryOptions } from "@/transtack-options/category-data";
 
 const slugify = (str: string) =>
   str
@@ -25,6 +26,12 @@ const slugify = (str: string) =>
 
 export const CreateCategoryForm = () => {
   const close = useModalStore((state) => state.close);
+  const data = useModalStore((state) => state.data);
+
+  const { data: singleCat } = useQuery({
+    ...getSingleCategoryOptions(data ?? ""),
+    enabled: data !== null,
+  });
 
   const form = useForm<z.infer<typeof categoryValidator>>({
     resolver: zodResolver(categoryValidator),
@@ -33,6 +40,15 @@ export const CreateCategoryForm = () => {
       slug: "",
     },
   });
+
+  useEffect(() => {
+    if (singleCat?.data) {
+      form.reset({
+        name: singleCat.data.name ?? "",
+        slug: singleCat.data.slug ?? "",
+      });
+    }
+  }, [singleCat, form]);
 
   const name = useWatch({
     control: form.control,
@@ -67,8 +83,34 @@ export const CreateCategoryForm = () => {
       toast.error("Something went wrong");
     },
   });
+
+  // update mutation
+
+  const { mutate: updateMutate, isPending: isPendingUpdate } = useMutation({
+    mutationFn: updateCategory,
+    onSuccess: (result, variables) => {
+      if (result.error) {
+        toast.error(String(result.error));
+        return;
+      }
+
+      toast.success("Category created successfully");
+      queryClient.invalidateQueries({ queryKey: category_cache });
+      queryClient.invalidateQueries({
+        queryKey: single_category_cache(variables.slug),
+      });
+      close();
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
   function onSubmit(data: z.infer<typeof categoryValidator>) {
-    mutate(data);
+    if (singleCat?.data) {
+      updateMutate({ ...data, id: singleCat.data?.id });
+    } else {
+      mutate(data);
+    }
   }
 
   return (
@@ -87,7 +129,7 @@ export const CreateCategoryForm = () => {
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             Reset
           </Button>
-          {isPending ? (
+          {isPending || isPendingUpdate ? (
             <LoadingButton />
           ) : (
             <Button type="submit" form="form-rhf-demo">

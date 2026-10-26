@@ -43,10 +43,9 @@ export function DataTableViewOptions<TData extends RowData>({
         }
       />
 
-      <DropdownMenuContent align="end" className="w-37.5">
-        {/* Label must live inside a Group in the Base UI version */}
+      <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+          <DropdownMenuLabel>Columns visibility</DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {columns.map((column) => (
