@@ -2,6 +2,12 @@ import { Controller, Control, FieldValues, Path } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "cn";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "../ui/input-group";
 
 interface Props<T extends FieldValues> {
   name: Path<T>;
@@ -10,6 +16,7 @@ interface Props<T extends FieldValues> {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  maxNumber?: number;
 }
 
 export const TextareaController = <T extends FieldValues>({
@@ -19,6 +26,7 @@ export const TextareaController = <T extends FieldValues>({
   placeholder,
   className,
   disabled,
+  maxNumber,
 }: Props<T>) => {
   return (
     <Controller
@@ -29,15 +37,26 @@ export const TextareaController = <T extends FieldValues>({
           <div className="flex items-center">
             <FieldLabel htmlFor={name}>{title}</FieldLabel>
           </div>
-          <Textarea
-            {...field}
-            id={name}
-            aria-invalid={fieldState.invalid}
-            placeholder={placeholder}
-            className={cn("", className)}
-            disabled={disabled}
-            value={field.value ?? ""}
-          />
+
+          <InputGroup>
+            <InputGroupTextarea
+              {...field}
+              id={name}
+              aria-invalid={fieldState.invalid}
+              placeholder={placeholder}
+              rows={3}
+              className={cn("min-h-16 resize-none", className)}
+              disabled={disabled}
+              value={field.value ?? ""}
+            />
+            {maxNumber && (
+              <InputGroupAddon align="block-end">
+                <InputGroupText className="tabular-nums">
+                  {field.value.length}/{maxNumber} characters
+                </InputGroupText>
+              </InputGroupAddon>
+            )}
+          </InputGroup>
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
       )}

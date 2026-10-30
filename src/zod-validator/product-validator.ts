@@ -27,7 +27,7 @@ export const SKU_REGEX = /^[A-Z0-9]+(?:-[A-Z0-9]+)*$/;
 export const SIZE_REGEX = /^[A-Za-z0-9][A-Za-z0-9 ./-]{0,19}$/;
 
 /** "Midnight Blue", "Off-White", "Rose Gold" (letters, spaces, hyphen, apostrophe) */
-export const COLOR_NAME_REGEX = /^\p{L}[\p{L} '-]*$/u;
+export const COLOR_NAME_REGEX = /^[\p{L}][\p{L} '-]*$/u;
 
 /* -------------------------------------------------------------------------- */
 /*  Reusable pieces                                                           */
@@ -95,9 +95,18 @@ export const colorFormSchema = createInsertSchema(productColors, {
   name: z
     .string()
     .trim()
-    .min(2, "Color name is too short")
-    .max(40, "Color name is too long")
-    .regex(COLOR_NAME_REGEX, "Letters, spaces, hyphens and apostrophes only"),
+    .max(16, "Color name is too long")
+    .transform((value) => (value === "" ? undefined : value))
+    .pipe(
+      z
+        .string()
+        .regex(
+          COLOR_NAME_REGEX,
+          "Letters, spaces, hyphens and apostrophes only",
+        )
+        .optional(),
+    )
+    .optional(),
   hex: z.string().trim().regex(HEX_REGEX, "Use a hex color like #191970"),
   images: z
     .array(imageUrl)

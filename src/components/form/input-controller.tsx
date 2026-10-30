@@ -11,6 +11,8 @@ interface Props<T extends FieldValues> {
   inputTypes?: "text" | "password" | "email" | "number";
   className?: string;
   disabled?: boolean;
+  onChange?: (value: string) => void;
+  hideTitle?: boolean;
 }
 
 export const InputController = <T extends FieldValues>({
@@ -21,16 +23,18 @@ export const InputController = <T extends FieldValues>({
   inputTypes = "text",
   className,
   disabled,
+  onChange,
+  hideTitle = false,
 }: Props<T>) => {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          <div className="flex items-center">
-            <FieldLabel htmlFor={name}>{title}</FieldLabel>
-          </div>
+        <Field data-invalid={fieldState.invalid} className="flex-1">
+          <FieldLabel htmlFor={name} className={cn(hideTitle && "sr-only")}>
+            {title}
+          </FieldLabel>
           <Input
             {...field}
             id={name}
@@ -40,6 +44,10 @@ export const InputController = <T extends FieldValues>({
             className={cn("", className)}
             disabled={disabled}
             value={field.value ?? ""}
+            onChange={(e) => {
+              field.onChange(e);
+              onChange?.(e.target.value);
+            }}
           />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>
