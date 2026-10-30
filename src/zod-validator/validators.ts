@@ -3,8 +3,10 @@ import { createInsertSchema } from "drizzle-orm/zod";
 import {
   categories,
   products,
-  productVariants,
-} from "../schemas/products.schema";
+  // productSizes,
+  // sizeColors,
+  subCategories,
+} from "@/db/index.schema";
 
 export const slugSchema = z
   .string()
@@ -59,19 +61,25 @@ export const productsValidator = createInsertSchema(products, {
   specification: specificationValidator.shape.specification.optional(),
 });
 
-export const productVariantsValidator = createInsertSchema(productVariants, {
-  color: formArray(
-    z
-      .array(
-        z
-          .string()
-          .regex(
-            /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/,
-            "Invalid hex color",
-          ),
-      )
-      .optional(),
-  ),
-  images: z.array(z.url()),
-  size: z.string().optional(),
-});
+// export const productSizeValidator = createInsertSchema(productSizes, {
+//   price: z.coerce.number().nonnegative(),
+//   compareAtPrice: z.coerce.number().nonnegative().optional(),
+//   size: z.string().optional(),
+//   productSlug: z.string().optional(),
+// });
+
+// export const productColorValidator = createInsertSchema(sizeColors, {
+//   sizeId: z.uuid().optional(),
+//   hex: z
+//     .string()
+//     .regex(
+//       /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/,
+//       "Invalid hex color",
+//     )
+//     .optional(),
+//   images: z.array(z.url()).optional(),
+//   name: z.string().optional(),
+//   sku: z.string(),
+// });
+
+export const subCategoriesValidator = createInsertSchema(subCategories);

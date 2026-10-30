@@ -1,0 +1,726 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "1cdedb9b-24af-4a33-9696-1add9f5764ae",
+  "prevIds": [
+    "f89058b9-89e7-4eb2-a8cb-68623090da14"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_colors"
+      ],
+      "writes": [
+        "s|tbl|public.product_colors",
+        "n|tbl|public.product_colors",
+        "e|tbl|public.product_colors",
+        "n|rel|public.product_colors",
+        "n|type|public.product_colors",
+        "n|rel|public.product_colors_pkey",
+        "n|rel|public.product_colors_unique"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_variants"
+      ],
+      "writes": [
+        "s|tbl|public.product_variants",
+        "n|tbl|public.product_variants",
+        "e|tbl|public.product_variants",
+        "n|rel|public.product_variants",
+        "n|type|public.product_variants",
+        "n|rel|public.product_variants_pkey",
+        "n|rel|public.product_variants_unique",
+        "n|rel|public.product_variants_sku_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "drop_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "size_colors"
+      ],
+      "writes": [
+        "s|tbl|public.size_colors",
+        "n|tbl|public.size_colors",
+        "e|tbl|public.size_colors",
+        "n|rel|public.size_colors",
+        "n|type|public.size_colors"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "products",
+        "status"
+      ],
+      "writes": [
+        "s|colprop|public.products.status.notNull"
+      ],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.status"
+      ],
+      "sqlHash": "f3b8d2b926832f5c"
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "product_colors",
+        "product_colors_product_idx"
+      ],
+      "writes": [
+        "s|idx|public.product_colors_product_idx",
+        "n|idx|public.product_colors_product_idx",
+        "e|idx|public.product_colors_product_idx",
+        "n|rel|public.product_colors_product_idx"
+      ],
+      "reads": [
+        "n|tbl|public.product_colors",
+        "n|sch|public",
+        "n|col|public.product_colors.product_slug"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "product_variants",
+        "product_variants_size_idx"
+      ],
+      "writes": [
+        "s|idx|public.product_variants_size_idx",
+        "n|idx|public.product_variants_size_idx",
+        "e|idx|public.product_variants_size_idx",
+        "n|rel|public.product_variants_size_idx"
+      ],
+      "reads": [
+        "n|tbl|public.product_variants",
+        "n|sch|public",
+        "n|col|public.product_variants.size_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "product_variants",
+        "product_variants_color_idx"
+      ],
+      "writes": [
+        "s|idx|public.product_variants_color_idx",
+        "n|idx|public.product_variants_color_idx",
+        "e|idx|public.product_variants_color_idx",
+        "n|rel|public.product_variants_color_idx"
+      ],
+      "reads": [
+        "n|tbl|public.product_variants",
+        "n|sch|public",
+        "n|col|public.product_variants.color_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "products",
+        "products_category_idx"
+      ],
+      "writes": [
+        "s|idx|public.products_category_idx",
+        "n|idx|public.products_category_idx",
+        "e|idx|public.products_category_idx",
+        "n|rel|public.products_category_idx"
+      ],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.category_slug"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "products",
+        "products_sub_category_idx"
+      ],
+      "writes": [
+        "s|idx|public.products_sub_category_idx",
+        "n|idx|public.products_sub_category_idx",
+        "e|idx|public.products_sub_category_idx",
+        "n|rel|public.products_sub_category_idx"
+      ],
+      "reads": [
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.products.sub_category_slug"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_colors"
+      ],
+      "writes": [
+        "s|fk|public.product_colors.product_colors_product_slug_products_slug_fkey",
+        "n|fk|public.product_colors.product_colors_product_slug_products_slug_fkey",
+        "e|fk|public.product_colors.product_colors_product_slug_products_slug_fkey",
+        "n|con|public.product_colors.product_colors_product_slug_products_slug_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_colors",
+        "n|sch|public",
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.product_colors.product_slug",
+        "n|col|public.products.slug",
+        "e|uniqueness|public.products.slug"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_variants"
+      ],
+      "writes": [
+        "s|fk|public.product_variants.product_variants_size_id_product_sizes_id_fkey",
+        "n|fk|public.product_variants.product_variants_size_id_product_sizes_id_fkey",
+        "e|fk|public.product_variants.product_variants_size_id_product_sizes_id_fkey",
+        "n|con|public.product_variants.product_variants_size_id_product_sizes_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_variants",
+        "n|sch|public",
+        "n|tbl|public.product_sizes",
+        "n|sch|public",
+        "n|col|public.product_variants.size_id",
+        "n|col|public.product_sizes.id",
+        "e|uniqueness|public.product_sizes.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_variants"
+      ],
+      "writes": [
+        "s|fk|public.product_variants.product_variants_color_id_product_colors_id_fkey",
+        "n|fk|public.product_variants.product_variants_color_id_product_colors_id_fkey",
+        "e|fk|public.product_variants.product_variants_color_id_product_colors_id_fkey",
+        "n|con|public.product_variants.product_variants_color_id_product_colors_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_variants",
+        "n|sch|public",
+        "n|tbl|public.product_colors",
+        "n|sch|public",
+        "n|col|public.product_variants.color_id",
+        "n|col|public.product_colors.id",
+        "e|uniqueness|public.product_colors.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "product_colors",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "product_variants",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "product_slug",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "hex",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "images",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 1,
+        "default": "'{}'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "size_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "color_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "sku",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "product_colors_product_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "product_slug",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_size_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "size_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_color_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "color_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "products",
+        "name": "products_category_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "category_slug",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "products",
+        "name": "products_sub_category_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "sub_category_slug",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "product_colors_product_slug_products_slug_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "product_slug"
+        ],
+        "schemaTo": "public",
+        "tableTo": "products",
+        "columnsTo": [
+          "slug"
+        ],
+        "onUpdate": "CASCADE",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_size_id_product_sizes_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "size_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "product_sizes",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_color_id_product_colors_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "color_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "product_colors",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "product_colors_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_colors",
+        "name": "product_colors_unique",
+        "nameExplicit": true,
+        "columns": [
+          "product_slug",
+          "hex"
+        ],
+        "nullsNotDistinct": true,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_unique",
+        "nameExplicit": true,
+        "columns": [
+          "size_id",
+          "color_id"
+        ],
+        "nullsNotDistinct": true,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_variants",
+        "name": "product_variants_sku_key",
+        "nameExplicit": false,
+        "columns": [
+          "sku"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "drop",
+      "key": "tables\u0000[\"public\",\"size_colors\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"id\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"size_id\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"name\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"hex\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"sku\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"images\"]"
+    },
+    {
+      "op": "drop",
+      "key": "indexes\u0000[\"public\",\"size_colors_size_idx\"]"
+    },
+    {
+      "op": "drop",
+      "key": "fks\u0000[\"public\",\"size_colors\",\"size_colors_size_id_product_sizes_id_fkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "pks\u0000[\"public\",\"size_colors\",\"size_colors_pkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"size_colors\",\"size_colors_unique\"]"
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"size_colors\",\"size_colors_sku_key\"]"
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"products\",\"status\"]",
+      "set": {
+        "notNull": true
+      }
+    }
+  ]
+}

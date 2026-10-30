@@ -1,0 +1,56 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "8c3b978e-9caf-4e5d-8dbc-48f3954b7ec8",
+  "prevIds": [
+    "fbc8dd2a-4694-48c3-80ac-15c0535920eb"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "sub_categories"
+      ],
+      "writes": [
+        "s|fk|public.sub_categories.sub_categories_cat_slug_categories_slug_fkey",
+        "n|fk|public.sub_categories.sub_categories_cat_slug_categories_slug_fkey",
+        "e|fk|public.sub_categories.sub_categories_cat_slug_categories_slug_fkey",
+        "n|con|public.sub_categories.sub_categories_cat_slug_categories_slug_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sub_categories",
+        "n|sch|public",
+        "n|tbl|public.categories",
+        "n|sch|public",
+        "n|col|public.sub_categories.cat_slug",
+        "n|col|public.categories.slug",
+        "e|uniqueness|public.categories.slug"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sub_categories",
+        "name": "sub_categories_cat_slug_categories_slug_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "cat_slug"
+        ],
+        "schemaTo": "public",
+        "tableTo": "categories",
+        "columnsTo": [
+          "slug"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    }
+  ]
+}

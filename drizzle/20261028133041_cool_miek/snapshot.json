@@ -1,0 +1,156 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "fbc8dd2a-4694-48c3-80ac-15c0535920eb",
+  "prevIds": [
+    "8937d589-a375-40e1-9b6e-9220801e1e3f"
+  ],
+  "footprints": [
+    {
+      "statementType": "drop_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "size_colors"
+      ],
+      "writes": [
+        "s|fk|public.size_colors.size_colors_size_id_product_sizes_id_fkey",
+        "n|fk|public.size_colors.size_colors_size_id_product_sizes_id_fkey",
+        "e|fk|public.size_colors.size_colors_size_id_product_sizes_id_fkey",
+        "n|con|public.size_colors.size_colors_size_id_product_sizes_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.size_colors",
+        "n|sch|public",
+        "e|col|public.size_colors.size_id"
+      ]
+    },
+    {
+      "statementType": "drop_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_sizes"
+      ],
+      "writes": [
+        "s|tbl|public.product_sizes",
+        "n|tbl|public.product_sizes",
+        "e|tbl|public.product_sizes",
+        "n|rel|public.product_sizes",
+        "n|type|public.product_sizes"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "drop_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "size_colors"
+      ],
+      "writes": [
+        "s|tbl|public.size_colors",
+        "n|tbl|public.size_colors",
+        "e|tbl|public.size_colors",
+        "n|rel|public.size_colors",
+        "n|type|public.size_colors"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "drop",
+      "key": "tables\u0000[\"public\",\"product_sizes\"]"
+    },
+    {
+      "op": "drop",
+      "key": "tables\u0000[\"public\",\"size_colors\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"product_sizes\",\"id\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"product_sizes\",\"product_slug\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"product_sizes\",\"size\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"product_sizes\",\"price\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"product_sizes\",\"compare_at_price\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"id\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"size_id\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"name\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"hex\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"sku\"]"
+    },
+    {
+      "op": "drop",
+      "key": "columns\u0000[\"public\",\"size_colors\",\"images\"]"
+    },
+    {
+      "op": "drop",
+      "key": "indexes\u0000[\"public\",\"product_sizes_product_idx\"]"
+    },
+    {
+      "op": "drop",
+      "key": "indexes\u0000[\"public\",\"size_colors_size_idx\"]"
+    },
+    {
+      "op": "drop",
+      "key": "fks\u0000[\"public\",\"product_sizes\",\"product_sizes_product_slug_products_id_fkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "fks\u0000[\"public\",\"size_colors\",\"size_colors_size_id_product_sizes_id_fkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "pks\u0000[\"public\",\"product_sizes\",\"product_sizes_pkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "pks\u0000[\"public\",\"size_colors\",\"size_colors_pkey\"]"
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"product_sizes\",\"product_sizes_unique\"]"
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"size_colors\",\"size_colors_unique\"]"
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"size_colors\",\"size_colors_sku_key\"]"
+    }
+  ]
+}

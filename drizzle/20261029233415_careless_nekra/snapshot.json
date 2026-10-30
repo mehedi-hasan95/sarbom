@@ -1,0 +1,79 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "f89058b9-89e7-4eb2-a8cb-68623090da14",
+  "prevIds": [
+    "2e08833d-6741-4e73-a2d0-82619ae50bb9"
+  ],
+  "footprints": [
+    {
+      "statementType": "drop_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_sizes"
+      ],
+      "writes": [
+        "s|fk|public.product_sizes.product_sizes_product_slug_products_id_fkey",
+        "n|fk|public.product_sizes.product_sizes_product_slug_products_id_fkey",
+        "e|fk|public.product_sizes.product_sizes_product_slug_products_id_fkey",
+        "n|con|public.product_sizes.product_sizes_product_slug_products_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_sizes",
+        "n|sch|public",
+        "e|col|public.product_sizes.product_slug"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_sizes"
+      ],
+      "writes": [
+        "s|fk|public.product_sizes.product_sizes_product_slug_products_slug_fkey",
+        "n|fk|public.product_sizes.product_sizes_product_slug_products_slug_fkey",
+        "e|fk|public.product_sizes.product_sizes_product_slug_products_slug_fkey",
+        "n|con|public.product_sizes.product_sizes_product_slug_products_slug_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_sizes",
+        "n|sch|public",
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.product_sizes.product_slug",
+        "n|col|public.products.slug",
+        "e|uniqueness|public.products.slug"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "product_sizes",
+        "name": "product_sizes_product_slug_products_slug_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "product_slug"
+        ],
+        "schemaTo": "public",
+        "tableTo": "products",
+        "columnsTo": [
+          "slug"
+        ],
+        "onUpdate": "CASCADE",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "drop",
+      "key": "fks\u0000[\"public\",\"product_sizes\",\"product_sizes_product_slug_products_id_fkey\"]"
+    }
+  ]
+}

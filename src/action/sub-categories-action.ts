@@ -1,25 +1,25 @@
 "use server";
 
 import { db } from "@/db";
-import { categories } from "@/db/index.schema";
-import { categoryValidator } from "@/db/zod-validator/validators";
+import { subCategories } from "@/db/index.schema";
 import { getSession } from "@/lib/get-session";
 import { getPgError } from "@/utils/error-handler";
+import { subCategoriesValidator } from "@/zod-validator/validators";
 import { eq } from "drizzle-orm";
 import z from "zod";
 
-export const getCategory = async () => {
-  const data = await db.query.categories.findMany({
+export const getSubCategory = async () => {
+  const data = await db.query.subCategories.findMany({
     orderBy: { createdAt: "desc" },
   });
   return { data };
 };
 
-export const createCategory = async (
-  values: z.infer<typeof categoryValidator>,
+export const createSubCategory = async (
+  values: z.infer<typeof subCategoriesValidator>,
 ) => {
   try {
-    const validateData = categoryValidator.safeParse(values);
+    const validateData = subCategoriesValidator.safeParse(values);
     if (!validateData.success) {
       return { error: "Invalid payload" };
     }
@@ -30,7 +30,7 @@ export const createCategory = async (
     // }
 
     const [data] = await db
-      .insert(categories)
+      .insert(subCategories)
       .values(validateData.data)
       .returning();
 
@@ -39,17 +39,17 @@ export const createCategory = async (
     const pgError = getPgError(error);
 
     if (pgError?.code === "23505") {
-      return { error: "A category with this slug already exists" };
+      return { error: "A sub category with this slug already exists" };
     }
     return { error: "Something went wrong" };
   }
 };
 
-export const updateCategory = async (
-  values: z.infer<typeof categoryValidator> & { id: string },
+export const updateSubCategory = async (
+  values: z.infer<typeof subCategoriesValidator> & { id: string },
 ) => {
   try {
-    const validateData = categoryValidator.safeParse(values);
+    const validateData = subCategoriesValidator.safeParse(values);
     if (!validateData.success) {
       return { error: "Invalid payload" };
     }
@@ -60,36 +60,36 @@ export const updateCategory = async (
     // }
 
     const data = await db
-      .update(categories)
+      .update(subCategories)
       .set({ ...validateData.data })
-      .where(eq(categories.id, validateData.data.id!))
+      .where(eq(subCategories.id, validateData.data.id!))
       .returning();
     return { data };
   } catch (error) {
     const pgError = getPgError(error);
 
     if (pgError?.code === "23505") {
-      return { error: "A category with this slug already exists" };
+      return { error: "A sub category with this slug already exists" };
     }
     return { error: "Something went wrong" };
   }
 };
 
-export const deleteCategory = async (id: string) => {
+export const deleteSubCategory = async (id: string) => {
   try {
     // const user = await getSession()
     // if (!user||user.role!=="admin") {
     //     return {error:"Unauthorize"}
     // }
 
-    await db.delete(categories).where(eq(categories.id, id)).returning();
-    return { data: "Category delete successfully" };
+    await db.delete(subCategories).where(eq(subCategories.id, id)).returning();
+    return { data: "Sub Category delete successfully" };
   } catch (error) {
     return { error: error || "Something went wrong" };
   }
 };
 
-export const getSingleCategory = async (slug: string) => {
-  const data = await db.query.categories.findFirst({ where: { slug } });
+export const getSingleSubCategory = async (slug: string) => {
+  const data = await db.query.subCategories.findFirst({ where: { slug } });
   return { data };
 };

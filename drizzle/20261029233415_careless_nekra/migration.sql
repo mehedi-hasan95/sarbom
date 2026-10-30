@@ -1,0 +1,2 @@
+ALTER TABLE "product_sizes" DROP CONSTRAINT "product_sizes_product_slug_products_id_fkey";--> statement-breakpoint
+ALTER TABLE "product_sizes" ADD CONSTRAINT "product_sizes_product_slug_products_slug_fkey" FOREIGN KEY ("product_slug") REFERENCES "products"("slug") ON DELETE CASCADE ON UPDATE CASCADE;

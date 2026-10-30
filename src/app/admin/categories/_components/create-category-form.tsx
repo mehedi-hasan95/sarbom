@@ -5,7 +5,6 @@ import { useForm, useWatch } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldGroup } from "@/components/ui/field";
-import { categoryValidator } from "@/db/zod-validator/validators";
 import { InputController } from "@/components/form/input-controller";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/store/useModalStore";
@@ -15,14 +14,8 @@ import { toast } from "sonner";
 import { category_cache, single_category_cache } from "@/constants/query-cache";
 import { LoadingButton } from "@/components/common/loading-button";
 import { getSingleCategoryOptions } from "@/transtack-options/category-data";
-
-const slugify = (str: string) =>
-  str
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+import { slugify } from "@/lib/utils";
+import { categoryValidator } from "@/zod-validator/validators";
 
 export const CreateCategoryForm = () => {
   const close = useModalStore((state) => state.close);

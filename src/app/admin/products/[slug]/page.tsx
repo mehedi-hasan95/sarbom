@@ -1,5 +1,7 @@
+import { CreateProduct } from "./_components/create-product";
+
 const Page = async () => {
-  return <div>Products Create</div>;
+  return <CreateProduct />;
 };
 
 export default Page;

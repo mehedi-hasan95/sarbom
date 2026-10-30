@@ -2,6 +2,7 @@ import {
   CalendarCog,
   ChartColumn,
   LayoutDashboard,
+  ListIcon,
   Package,
   ShoppingCart,
   TrendingUp,
@@ -23,4 +24,5 @@ export const ADMIN_MENUS_MAIN: DASHBOARD_MENU_ITEM[] = [
 export const ADMIN_MENUS_E_COMMERCE: DASHBOARD_MENU_ITEM[] = [
   { title: "Products", url: "/admin/products", icon: ShoppingCart },
   { title: "Categories", url: "/admin/categories", icon: CalendarCog },
+  { title: "Sub Categories", url: "/admin/sub-categories", icon: ListIcon },
 ];

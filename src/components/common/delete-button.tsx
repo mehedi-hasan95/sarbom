@@ -15,8 +15,15 @@ interface Props {
   queryKey: readonly unknown[];
   deleteFn: (id: string) => Promise<DeleteResponse>;
   title?: string;
+  description?: string;
 }
-export const DeleteButton = ({ queryKey, deleteFn, title, id }: Props) => {
+export const DeleteButton = ({
+  queryKey,
+  deleteFn,
+  title,
+  id,
+  description,
+}: Props) => {
   const close = useModalStore((state) => state.close);
   const queryClient = useQueryClient();
 
@@ -36,7 +43,7 @@ export const DeleteButton = ({ queryKey, deleteFn, title, id }: Props) => {
   return (
     <ModifyDialog
       title={title}
-      description="Todo"
+      description={description}
       trigger={<Button>Mehedi</Button>}
       id="delete_category"
       showTrigger={false}

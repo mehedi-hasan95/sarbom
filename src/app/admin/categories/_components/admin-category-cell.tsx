@@ -16,10 +16,9 @@ import { Edit, MoreHorizontal, Trash } from "lucide-react";
 interface Props {
   id: string;
   slug: string;
-  onDelete: (id: string) => void;
 }
 
-export const AdminCategoryCell = ({ id, slug, onDelete }: Props) => {
+export const AdminCategoryCell = ({ id, slug }: Props) => {
   const open = useModalStore((set) => set.open);
 
   return (

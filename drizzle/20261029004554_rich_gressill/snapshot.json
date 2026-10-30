@@ -1,0 +1,47 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "7f0c88b0-207d-4de4-ab64-f7cdcd3c848c",
+  "prevIds": [
+    "8c3b978e-9caf-4e5d-8dbc-48f3954b7ec8"
+  ],
+  "footprints": [
+    {
+      "statementType": "add_unique",
+      "statementTarget": [
+        "table",
+        "public",
+        "sub_categories"
+      ],
+      "writes": [
+        "s|uq|public.sub_categories.sub_categories_cat_slug_key",
+        "n|uq|public.sub_categories.sub_categories_cat_slug_key",
+        "e|uq|public.sub_categories.sub_categories_cat_slug_key",
+        "n|con|public.sub_categories.sub_categories_cat_slug_key",
+        "n|rel|public.sub_categories_cat_slug_key"
+      ],
+      "reads": [
+        "n|tbl|public.sub_categories",
+        "n|sch|public",
+        "n|col|public.sub_categories.cat_slug"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sub_categories",
+        "name": "sub_categories_cat_slug_key",
+        "nameExplicit": false,
+        "columns": [
+          "cat_slug"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}

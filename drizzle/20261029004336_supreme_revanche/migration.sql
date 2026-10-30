@@ -1,0 +1,1 @@
+ALTER TABLE "sub_categories" ADD CONSTRAINT "sub_categories_cat_slug_categories_slug_fkey" FOREIGN KEY ("cat_slug") REFERENCES "categories"("slug") ON DELETE SET NULL;

@@ -14,7 +14,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { getQueryClient } from "@/lib/transtack-query/get-query-client";
-import { getCategoriesOptions } from "@/transtack-options/category-data";
+import {
+  getCategoriesOptions,
+  getSubCategoriesOptions,
+} from "@/transtack-options/category-data";
 import { dehydrate, HydrationBoundary, noop } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { connection } from "next/server";
@@ -53,7 +56,12 @@ const Page = async ({ children }: Props) => {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <Suspense fallback={<p>Loading...</p>}>
-            <Hydrated prefetch={(qc) => qc.query(getCategoriesOptions)}>
+            <Hydrated
+              prefetch={(qc) => [
+                qc.query(getCategoriesOptions),
+                qc.query(getSubCategoriesOptions),
+              ]}
+            >
               {children}
             </Hydrated>
           </Suspense>
