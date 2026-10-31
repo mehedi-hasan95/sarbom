@@ -1,0 +1,1 @@
+ALTER TABLE "products" ADD COLUMN "is_variant" boolean DEFAULT false;

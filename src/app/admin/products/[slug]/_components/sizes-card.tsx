@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductFormInput } from "@/zod-validator/product-validator";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { ModifyCard } from "./modify-card";
 import { FieldGroup } from "@/components/ui/field";
 import { ArrayError } from "./create-product-form";
@@ -16,6 +16,8 @@ const emptyVariant = (colorKey: string | null = null) => ({
 export const SizesCard = () => {
   const { control, getValues, formState } = useFormContext<ProductFormInput>();
   const sizes = useFieldArray({ control, name: "sizes" });
+
+  const isVariant = useWatch({ control, name: "isVariant" });
 
   function addSize() {
     const colors = getValues("colors");
@@ -46,11 +48,13 @@ export const SizesCard = () => {
 
         <ArrayError error={formState.errors.sizes} />
 
-        <div>
-          <Button type="button" variant="outline" size="sm" onClick={addSize}>
-            <Plus aria-hidden /> Add size
-          </Button>
-        </div>
+        {isVariant && (
+          <div>
+            <Button type="button" variant="outline" size="sm" onClick={addSize}>
+              <Plus aria-hidden /> Add size
+            </Button>
+          </div>
+        )}
       </FieldGroup>
     </ModifyCard>
   );

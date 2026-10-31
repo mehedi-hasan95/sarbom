@@ -8,6 +8,7 @@ import { ModifyCard } from "./modify-card";
 import { InputController } from "@/components/form/input-controller";
 import { TextareaController } from "@/components/form/textarea-controller";
 import { slugify } from "@/lib/utils";
+import { SwitchController } from "@/components/form/switch-controller";
 
 export const DetailsCard = () => {
   const { control, setValue, formState } = useFormContext<ProductFormInput>();
@@ -47,6 +48,12 @@ export const DetailsCard = () => {
         />
 
         <TextareaController control={control} name="description" />
+
+        <SwitchController
+          control={control}
+          name="isVariant"
+          title="Is this variant product?"
+        />
       </FieldGroup>
     </ModifyCard>
   );

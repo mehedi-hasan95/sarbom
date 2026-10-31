@@ -9,8 +9,9 @@ import { EmptyFilter, eq } from "drizzle-orm";
 import z from "zod";
 
 // used emptyfilter
-export const getSubCategory = async () => {
+export const getSubCategory = async (catSlug?: string) => {
   const data = await db.query.subCategories.findMany({
+    where: catSlug ? { catSlug } : EmptyFilter,
     orderBy: { createdAt: "desc" },
   });
   return { data };

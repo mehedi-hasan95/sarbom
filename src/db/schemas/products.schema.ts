@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   jsonb,
   numeric,
@@ -67,6 +68,7 @@ export const products = snakeCase.table(
         onUpdate: "cascade",
       }),
     status: productStatus().notNull().default("inactive"),
+    isVariant: boolean().default(false),
     ...timestamps,
     deletedAt: timestamp({ withTimezone: true }),
   },

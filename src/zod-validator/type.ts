@@ -1,4 +1,4 @@
-import z from "zod";
-import { specificationValidator } from "./validators";
-
-export type SPECIFICATION = z.infer<typeof specificationValidator>;
+export type SPECIFICATION = {
+  key: string;
+  value: string;
+}[];

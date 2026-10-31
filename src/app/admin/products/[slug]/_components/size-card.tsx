@@ -35,22 +35,33 @@ export const SizeCard = ({
   const used = useWatch({ control, name: `sizes.${index}.variants` });
   const variants = useFieldArray({ control, name: `sizes.${index}.variants` });
 
+  const isVariant = useWatch({ control, name: "isVariant" });
+
   const hasColors = colors.length > 0;
 
-  console.log(colors.length);
   const missingColors = colors.filter(
     (c) => !used.some((v) => v.colorKey === c.key),
   );
+
+  // Lets Base UI resolve key -> label even when the popup is closed
+  const colorItems = colors.map((c) => ({
+    value: c.key,
+    label: c.name || c.hex || "Unnamed color",
+    hex: c.hex,
+  }));
+
   return (
     <div className="space-y-4 rounded-lg border p-4">
       <div className="flex items-start gap-3">
         <div className="grid flex-1 gap-3 sm:grid-cols-3">
-          <InputController
-            name={`sizes.${index}.size`}
-            control={control}
-            placeholder="M"
-            title="Size"
-          />
+          {isVariant && (
+            <InputController
+              name={`sizes.${index}.size`}
+              control={control}
+              placeholder="M"
+              title="Size"
+            />
+          )}
 
           <InputController
             name={`sizes.${index}.price`}
@@ -90,7 +101,7 @@ export const SizeCard = ({
                 : "grid items-start gap-3 sm:grid-cols-[1fr_6.5rem_auto]"
             }
           >
-            {hasColors && (
+            {hasColors && isVariant && (
               <Controller
                 name={`sizes.${index}.variants.${j}.colorKey`}
                 control={control}
@@ -104,32 +115,50 @@ export const SizeCard = ({
                     </FieldLabel>
                     <Select
                       name={field.name}
-                      value={field.value ?? ""}
-                      onValueChange={field.onChange}
+                      items={colorItems}
+                      value={field.value || null}
+                      onValueChange={(v) => field.onChange(v ?? "")}
                     >
                       <SelectTrigger
                         id={`variant-${index}-${j}-color`}
                         aria-invalid={fieldState.invalid}
                         className="w-full"
                       >
-                        <SelectValue placeholder="Select a color" />
+                        <SelectValue placeholder="Select a color">
+                          {(value: string | null) => {
+                            const item = colorItems.find(
+                              (i) => i.value === value,
+                            );
+                            if (!item) return null;
+                            return (
+                              <span className="flex items-center gap-2">
+                                <span
+                                  aria-hidden
+                                  className="size-3 rounded-full border"
+                                  style={{ backgroundColor: item.hex }}
+                                />
+                                {item.label}
+                              </span>
+                            );
+                          }}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        {colors.map((c) => (
+                        {colorItems.map((item) => (
                           <SelectItem
-                            key={c.key}
-                            value={c.key}
+                            key={item.value}
+                            value={item.value}
                             disabled={used.some(
-                              (u, k) => k !== j && u.colorKey === c.key,
+                              (u, k) => k !== j && u.colorKey === item.value,
                             )}
                           >
                             <span className="flex items-center gap-2">
                               <span
                                 aria-hidden
                                 className="size-3 rounded-full border"
-                                style={{ backgroundColor: c.hex }}
+                                style={{ backgroundColor: item.hex }}
                               />
-                              {c.name || c.hex || "Unnamed color"}
+                              {item.label}
                             </span>
                           </SelectItem>
                         ))}

@@ -81,7 +81,7 @@ export const CreateSubCategoryForm = () => {
       }
 
       toast.success("Sub Category created successfully");
-      queryClient.invalidateQueries({ queryKey: sub_category_cache });
+      queryClient.invalidateQueries({ queryKey: sub_category_cache() });
       close();
     },
     onError: () => {
@@ -100,7 +100,7 @@ export const CreateSubCategoryForm = () => {
       }
 
       toast.success("Sub Category created successfully");
-      queryClient.invalidateQueries({ queryKey: sub_category_cache });
+      queryClient.invalidateQueries({ queryKey: sub_category_cache() });
       queryClient.invalidateQueries({
         queryKey: single_sub_category_cache(variables.slug),
       });

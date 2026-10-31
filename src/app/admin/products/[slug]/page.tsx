@@ -2,15 +2,7 @@
 import { CreateProductForm } from "./_components/create-product-form";
 
 const Page = () => {
-  return (
-    <CreateProductForm
-      categories={[{ slug: "clothing", name: "Clothing" }]}
-      subCategories={[
-        { slug: "t-shirts", name: "T-shirts", categorySlug: "clothing" },
-      ]}
-      onSubmit={(values) => console.log(values)}
-    />
-  );
+  return <CreateProductForm />;
 };
 
 export default Page;

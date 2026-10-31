@@ -29,11 +29,12 @@ export const getSingleCategoryOptions = (slug: string) => {
 
 // sub categories
 
-export const getSubCategoriesOptions = queryOptions({
-  queryKey: sub_category_cache,
-  queryFn: getSubCategory,
-  staleTime: 5 * 60 * 1000,
-});
+export const getSubCategoriesOptions = (catSlug?: string) =>
+  queryOptions({
+    queryKey: sub_category_cache(catSlug),
+    queryFn: () => getSubCategory(catSlug),
+    staleTime: 5 * 60 * 1000,
+  });
 
 export const getSingleSubCategoryOptions = (slug: string) => {
   return queryOptions({

@@ -3,30 +3,10 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Field, FieldError } from "@/components/ui/field";
 import {
   productFormSchema,
   type ProductFormInput,
@@ -36,20 +16,10 @@ import { DetailsCard } from "./details-card";
 import { SpecificationCard } from "./specification-card";
 import { ColorsCard } from "./colors-card";
 import { SizesCard } from "./sizes-card";
-
-/* -------------------------------------------------------------------------- */
-/*  Types & helpers                                                           */
-/* -------------------------------------------------------------------------- */
-
-type Option = { slug: string; name: string };
-type SubCategoryOption = Option & { categorySlug: string };
-
-type CreateProductFormProps = {
-  categories: Option[];
-  subCategories: SubCategoryOption[];
-  onSubmit: (values: ProductFormValues) => Promise<void> | void;
-  defaultValues?: Partial<ProductFormInput>;
-};
+import { OrganizationCard } from "./organization-card";
+import { useMutation } from "@tanstack/react-query";
+import { createProductAction } from "@/action/products-action";
+import { LoadingButton } from "@/components/common/loading-button";
 
 export const emptyVariant = (colorKey: string | null = null) => ({
   colorKey,
@@ -70,12 +40,8 @@ export function ArrayError({ error }: { error: unknown }) {
 /*  Main form                                                                 */
 /* -------------------------------------------------------------------------- */
 
-export function CreateProductForm({
-  categories,
-  subCategories,
-  onSubmit,
-  defaultValues,
-}: CreateProductFormProps) {
+export function CreateProductForm() {
+  const [initialColorKey] = React.useState(() => crypto.randomUUID());
   const form = useForm<ProductFormInput, unknown, ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     mode: "onTouched",
@@ -88,16 +54,33 @@ export function CreateProductForm({
       subCategorySlug: "",
       status: "inactive",
       specification: [],
-      colors: [],
+      colors: [{ key: initialColorKey, name: "", hex: "", images: [] }],
+      isVariant: false,
       sizes: [
-        { size: "", price: "", compareAtPrice: "", variants: [emptyVariant()] },
+        {
+          size: "",
+          price: "",
+          compareAtPrice: "",
+          variants: [emptyVariant(initialColorKey)],
+        },
       ],
-      ...defaultValues,
     },
   });
 
   const { isSubmitting, isSubmitted, isValid } = form.formState;
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: createProductAction,
+    onSuccess: (data) => {
+      console.log("data: ", data);
+    },
+    onError: (error) => {
+      console.log("error: ", error);
+    },
+  });
+  function onSubmit(data: ProductFormValues) {
+    mutate(data);
+  }
   return (
     <FormProvider {...form}>
       <form
@@ -114,10 +97,7 @@ export function CreateProductForm({
         </div>
 
         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
-          <OrganizationCard
-            categories={categories}
-            subCategories={subCategories}
-          />
+          <OrganizationCard />
           <Field orientation="horizontal">
             <Button
               type="button"
@@ -127,10 +107,16 @@ export function CreateProductForm({
             >
               Discard
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && <Loader2 className="animate-spin" aria-hidden />}
-              Create product
-            </Button>
+            {isPending ? (
+              <LoadingButton />
+            ) : (
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className="animate-spin" aria-hidden />
+                )}
+                Create product
+              </Button>
+            )}
           </Field>
           {isSubmitted && !isValid && (
             <FieldError
@@ -145,145 +131,5 @@ export function CreateProductForm({
         </aside>
       </form>
     </FormProvider>
-  );
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Status and categories                                                     */
-/* -------------------------------------------------------------------------- */
-
-function OrganizationCard({
-  categories,
-  subCategories,
-}: {
-  categories: Option[];
-  subCategories: SubCategoryOption[];
-}) {
-  const { control, setValue } = useFormContext<ProductFormInput>();
-  const categorySlug = useWatch({ control, name: "categorySlug" });
-  const visibleSubCategories = subCategories.filter(
-    (s) => s.categorySlug === categorySlug,
-  );
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Organization</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <FieldGroup>
-          <Controller
-            name="status"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="product-status">Status</FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger
-                    id="product-status"
-                    aria-invalid={fieldState.invalid}
-                    className="w-full"
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FieldDescription>
-                  Only active products show in the store.
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="categorySlug"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="product-category">Category</FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value}
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    setValue("subCategorySlug", "");
-                  }}
-                >
-                  <SelectTrigger
-                    id="product-category"
-                    aria-invalid={fieldState.invalid}
-                    className="w-full"
-                  >
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((c) => (
-                      <SelectItem key={c.slug} value={c.slug}>
-                        {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-
-          <Controller
-            name="subCategorySlug"
-            control={control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="product-sub-category">
-                  Sub category
-                </FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={!categorySlug}
-                >
-                  <SelectTrigger
-                    id="product-sub-category"
-                    aria-invalid={fieldState.invalid}
-                    className="w-full"
-                  >
-                    <SelectValue
-                      placeholder={
-                        categorySlug
-                          ? "Select a sub category"
-                          : "Select a category first"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {visibleSubCategories.map((s) => (
-                      <SelectItem key={s.slug} value={s.slug}>
-                        {s.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-        </FieldGroup>
-      </CardContent>
-    </Card>
   );
 }

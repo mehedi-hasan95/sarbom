@@ -190,6 +190,15 @@ export const productFormSchema = createInsertSchema(products, {
       seenHex.set(hex, i);
     });
 
+    // 2. Require hex when product is a variant
+    if (data.isVariant) {
+      data.colors.forEach((c, i) => {
+        if (!c.hex?.trim()) {
+          issue(["colors", i, "hex"], "Hex color is required for variants");
+        }
+      });
+    }
+
     // 2. unique size values; a blank size means "no sizes"
     const seenSize = new Set<string>();
 

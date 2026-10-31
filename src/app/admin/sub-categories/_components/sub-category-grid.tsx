@@ -17,7 +17,7 @@ export const SubCategoryGrid = () => {
       <DataTable columns={adminCategoryColumns} data={data} searchKey="name" />
       <DeleteButton
         deleteFn={deleteSubCategory}
-        queryKey={sub_category_cache}
+        queryKey={sub_category_cache()}
         id={deletedData!}
         title="Delete Sub Category"
         description="Delete sub categories"

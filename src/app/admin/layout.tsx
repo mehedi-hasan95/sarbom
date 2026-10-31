@@ -59,7 +59,7 @@ const Page = async ({ children }: Props) => {
             <Hydrated
               prefetch={(qc) => [
                 qc.query(getCategoriesOptions),
-                qc.query(getSubCategoriesOptions),
+                qc.query(getSubCategoriesOptions()),
               ]}
             >
               {children}

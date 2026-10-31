@@ -16,8 +16,10 @@ export const useGetSingleCategories = (slug: string) => {
   return { data: data.data, isLoading };
 };
 
-export const useGetSubCategories = () => {
-  const { data, isLoading } = useSuspenseQuery(getSubCategoriesOptions);
+export const useGetSubCategories = (catSlug?: string) => {
+  const { data, isLoading } = useSuspenseQuery(
+    getSubCategoriesOptions(catSlug),
+  );
   return { data: data.data, isLoading };
 };
 
