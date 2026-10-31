@@ -8,7 +8,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { InputController } from "@/components/form/input-controller";
 import { Button } from "@/components/ui/button";
 import { useModalStore } from "@/store/useModalStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   single_sub_category_cache,
@@ -16,23 +16,25 @@ import {
 } from "@/constants/query-cache";
 import { LoadingButton } from "@/components/common/loading-button";
 import { slugify } from "@/lib/utils";
-import {
-  useGetCategories,
-  useGetSingleSubCategories,
-} from "@/hooks/categories/use-categories";
+import { useGetCategories } from "@/hooks/categories/use-categories";
 import { subCategoriesValidator } from "@/zod-validator/validators";
 import {
   createSubCategory,
   updateSubCategory,
 } from "@/action/sub-categories-action";
 import { ComboboxController } from "@/components/form/combobox-controller";
+import { getSingleSubCategoryOptions } from "@/transtack-options/category-data";
 
 export const CreateSubCategoryForm = () => {
   const close = useModalStore((state) => state.close);
   const data = useModalStore((state) => state.data);
 
   const { data: categories } = useGetCategories();
-  const { data: singleSubCat } = useGetSingleSubCategories(data ?? "");
+  // const { data: singleSubCat } = useGetSingleSubCategories(data ?? "");
+  const { data: singleSubCat } = useQuery({
+    ...getSingleSubCategoryOptions(data ?? ""),
+    enabled: data !== null,
+  });
 
   const form = useForm<z.infer<typeof subCategoriesValidator>>({
     resolver: zodResolver(subCategoriesValidator),
@@ -46,9 +48,9 @@ export const CreateSubCategoryForm = () => {
   useEffect(() => {
     if (singleSubCat) {
       form.reset({
-        name: singleSubCat.name ?? "",
-        slug: singleSubCat.slug ?? "",
-        catSlug: singleSubCat.catSlug,
+        name: singleSubCat?.data?.name ?? "",
+        slug: singleSubCat.data?.slug ?? "",
+        catSlug: singleSubCat.data?.catSlug,
       });
     }
   }, [singleSubCat, form]);
@@ -110,7 +112,7 @@ export const CreateSubCategoryForm = () => {
   });
   function onSubmit(data: z.infer<typeof subCategoriesValidator>) {
     if (singleSubCat) {
-      updateMutate({ ...data, id: singleSubCat.id });
+      updateMutate({ ...data, id: singleSubCat.data?.id as string });
     } else {
       mutate(data);
     }

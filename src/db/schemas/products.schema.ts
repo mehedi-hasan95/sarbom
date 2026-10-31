@@ -3,6 +3,7 @@ import {
   jsonb,
   numeric,
   pgEnum,
+  serial,
   snakeCase,
   text,
   timestamp,
@@ -152,4 +153,15 @@ export const productVariants = snakeCase.table(
     index("product_variants_size_idx").on(t.sizeId),
     index("product_variants_color_idx").on(t.colorId),
   ],
+);
+
+export const images = snakeCase.table(
+  "images",
+  {
+    id: serial().primaryKey(),
+    url: text().notNull().unique(),
+    key: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("images_created_idx").on(t.createdAt)],
 );

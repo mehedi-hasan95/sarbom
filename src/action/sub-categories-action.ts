@@ -5,9 +5,10 @@ import { subCategories } from "@/db/index.schema";
 import { getSession } from "@/lib/get-session";
 import { getPgError } from "@/utils/error-handler";
 import { subCategoriesValidator } from "@/zod-validator/validators";
-import { eq } from "drizzle-orm";
+import { EmptyFilter, eq } from "drizzle-orm";
 import z from "zod";
 
+// used emptyfilter
 export const getSubCategory = async () => {
   const data = await db.query.subCategories.findMany({
     orderBy: { createdAt: "desc" },

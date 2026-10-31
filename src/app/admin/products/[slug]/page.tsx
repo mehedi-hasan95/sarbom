@@ -8,7 +8,6 @@ const Page = () => {
       subCategories={[
         { slug: "t-shirts", name: "T-shirts", categorySlug: "clothing" },
       ]}
-      uploadImage={async (file) => URL.createObjectURL(file)}
       onSubmit={(values) => console.log(values)}
     />
   );

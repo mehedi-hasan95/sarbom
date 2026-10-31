@@ -26,13 +26,11 @@ export const SKU_REGEX = /^[A-Z0-9]+(?:-[A-Z0-9]+)*$/;
 /** "S", "XL", "42", "10.5", "One Size", "32/34" */
 export const SIZE_REGEX = /^[A-Za-z0-9][A-Za-z0-9 ./-]{0,19}$/;
 
-/** "Midnight Blue", "Off-White", "Rose Gold" (letters, spaces, hyphen, apostrophe) */
+/** "Midnight Blue", "Off-White", "Rose Gold" */
 export const COLOR_NAME_REGEX = /^[\p{L}][\p{L} '-]*$/u;
 
 /* -------------------------------------------------------------------------- */
 /*  Reusable pieces                                                           */
-/*  RHF text inputs give "" when empty, so optional fields accept "" and the  */
-/*  root transform at the bottom converts "" -> null for the API / database.  */
 /* -------------------------------------------------------------------------- */
 
 const priceField = z
@@ -107,7 +105,15 @@ export const colorFormSchema = createInsertSchema(productColors, {
         .optional(),
     )
     .optional(),
-  hex: z.string().trim().regex(HEX_REGEX, "Use a hex color like #191970"),
+
+  // Optional hex: accepts "", undefined, or a valid hex color.
+  hex: z
+    .union([
+      z.literal(""),
+      z.string().trim().regex(HEX_REGEX, "Use a hex color like #191970"),
+    ])
+    .optional(),
+
   images: z
     .array(imageUrl)
     .min(1, "Add at least one image")
@@ -126,19 +132,24 @@ export const colorFormSchema = createInsertSchema(productColors, {
 export const productFormSchema = createInsertSchema(products, {
   name: (s) =>
     s.trim().min(3, "Name is too short").max(120, "Name is too long"),
+
   slug: (s) =>
     s
       .trim()
       .min(3, "Slug is too short")
       .max(160, "Slug is too long")
       .regex(SLUG_REGEX, "Lowercase letters, numbers and single hyphens only"),
+
   shortDesc: (s) =>
     s.trim().min(10, "At least 10 characters").max(200, "Max 200 characters"),
+
   description: (s) =>
     s.trim().min(30, "At least 30 characters").max(5000, "Max 5000 characters"),
+
   categorySlug: (s) => s.regex(SLUG_REGEX, "Select a category"),
+
   subCategorySlug: (s) => s.regex(SLUG_REGEX, "Select a sub category"),
-  // Match this to your SPECIFICATION type
+
   specification: z
     .array(
       z.object({
@@ -152,30 +163,45 @@ export const productFormSchema = createInsertSchema(products, {
   .omit({ id: true, createdAt: true, updatedAt: true, deletedAt: true })
   .extend({
     colors: z.array(colorFormSchema).max(20, "Maximum 20 colors"),
+
     sizes: z
       .array(sizeFormSchema)
       .min(1, "Add at least one size (or leave one blank for no size)")
       .max(30, "Maximum 30 sizes"),
   })
+
   /* ---------------------------- cross-field rules --------------------------- */
   .superRefine((data, ctx) => {
     const issue = (path: (string | number)[], message: string) =>
       ctx.addIssue({ code: "custom", path, message });
 
-    // 1. unique color hex (case-insensitive)
+    // 1. unique color hex (case-insensitive), ignoring empty hex values
     const seenHex = new Map<string, number>();
+
     data.colors.forEach((c, i) => {
+      if (!c.hex) return;
+
       const hex = c.hex.toLowerCase();
-      if (seenHex.has(hex)) issue(["colors", i, "hex"], "Duplicate color");
+
+      if (seenHex.has(hex)) {
+        issue(["colors", i, "hex"], "Duplicate color");
+      }
+
       seenHex.set(hex, i);
     });
 
-    // 2. unique size values; a blank size means "no sizes", so it must be the only one
+    // 2. unique size values; a blank size means "no sizes"
     const seenSize = new Set<string>();
+
     data.sizes.forEach((s, i) => {
       const key = s.size.toLowerCase();
-      if (seenSize.has(key)) issue(["sizes", i, "size"], "Duplicate size");
+
+      if (seenSize.has(key)) {
+        issue(["sizes", i, "size"], "Duplicate size");
+      }
+
       seenSize.add(key);
+
       if (s.size === "" && data.sizes.length > 1) {
         issue(
           ["sizes", i, "size"],
@@ -207,8 +233,10 @@ export const productFormSchema = createInsertSchema(products, {
 
         // 4. variants must line up with the colors list
         if (!hasColors) {
-          if (v.colorKey !== null)
+          if (v.colorKey !== null) {
             issue([...base, "colorKey"], "No colors defined");
+          }
+
           if (s.variants.length > 1) {
             issue(
               base,
@@ -226,24 +254,37 @@ export const productFormSchema = createInsertSchema(products, {
             "This color is already added for this size",
           );
         }
+
         usedColors.add(v.colorKey);
 
         // 6. SKU unique across the whole form
         if (v.sku !== "") {
-          if (seenSku.has(v.sku)) issue([...base, "sku"], "Duplicate SKU");
+          if (seenSku.has(v.sku)) {
+            issue([...base, "sku"], "Duplicate SKU");
+          }
+
           seenSku.set(v.sku, `${si}.${vi}`);
         }
       });
     });
   })
-  /* --------------- normalize "" -> null for the API / database -------------- */
+
+  /* --------------- normalize values for the API / database ----------------- */
   .transform((data) => ({
     ...data,
-    colors: data.colors.map((c) => ({ ...c, hex: c.hex.toLowerCase() })),
+
+    colors: data.colors.map((c) => ({
+      ...c,
+      hex: c.hex === "" || c.hex === undefined ? null : c.hex.toLowerCase(),
+    })),
+
     sizes: data.sizes.map((s) => ({
       ...s,
+
       size: s.size === "" ? null : s.size,
+
       compareAtPrice: s.compareAtPrice === "" ? null : s.compareAtPrice,
+
       variants: s.variants.map((v) => ({
         ...v,
         sku: v.sku === "" ? null : v.sku,
@@ -251,7 +292,12 @@ export const productFormSchema = createInsertSchema(products, {
     })),
   }));
 
-/** what the form holds (strings, "" for empty) */
+/* -------------------------------------------------------------------------- */
+/*  Types                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/** What the form holds (strings, "" for empty) */
 export type ProductFormInput = z.input<typeof productFormSchema>;
-/** what you send to the API (nulls normalized) */
+
+/** What you send to the API (nulls normalized) */
 export type ProductFormValues = z.output<typeof productFormSchema>;
